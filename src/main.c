@@ -1,5 +1,4 @@
 #include <cdeferlib/defer.h>
-#include <cdeferlib/try.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -7,8 +6,11 @@ char* file_content(char* name) {
     char* buf = malloc(1024);
     Defer free(buf);
 
-    FILE* f;
-    Try(f, fopen(name, "r"), return "");
+    FILE* f = fopen(name, "r");
+    if (!f) {
+        return NULL;
+    }
+
     Defer fclose(f);
 
     fgets(buf, 1024, f);
